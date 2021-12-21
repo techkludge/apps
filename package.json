@@ -1,4 +1,34 @@
 {
   "name": "daily-apps",
-  "private": true
+  "private": true,
+  "scripts": {
+    "dev": "turbo run dev --parallel --no-cache",
+    "test": "turbo run test",
+    "build": "turbo run build"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "dependencies": {
+    "lerna": "^3.19.0",
+    "turbo": "^1.0.19"
+  },
+  "turbo": {
+    "pipeline": {
+      "build": {
+        "dependsOn": [
+          "^build"
+        ],
+        "outputs": [
+          "dist/**"
+        ]
+      },
+      "test": {
+        "outputs": []
+      },
+      "dev": {
+        "cache": false
+      }
+    }
+  }
 }
