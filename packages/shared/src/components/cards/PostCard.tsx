@@ -20,7 +20,6 @@ import {
   featuredCommentsToButtons,
   getPostClassNames,
 } from './Card';
-import FeatherIcon from '../../../icons/feather.svg';
 import { Comment } from '../../graphql/comments';
 import styles from './Card.module.css';
 import TrendingFlag from './TrendingFlag';
@@ -29,11 +28,9 @@ import PostMetadata from './PostMetadata';
 import ActionButtons from './ActionButtons';
 import SourceButton from './SourceButton';
 import PostAuthor from './PostAuthor';
-import OptionsButton from '../buttons/OptionsButton';
 import { ProfilePicture } from '../ProfilePicture';
 import { Button } from '../buttons/Button';
 import { useShareOrCopyLink } from '../../hooks/useShareOrCopyLink';
-import useNotification from '../../hooks/useNotification';
 import { postAnalyticsEvent } from '../../lib/feed';
 
 const FeaturedComment = dynamic(() => import('./FeaturedComment'));
@@ -91,25 +88,22 @@ export const PostCard = forwardRef(function PostCard(
 
   const customStyle =
     selectedComment && !showImage ? { minHeight: '15.125rem' } : {};
-    
 
+  const shareLink = post?.commentsPermalink;
+  const copyLink = async () => {
+    await navigator.clipboard.writeText(shareLink);
+    onMessage('✅ Copied link to clipboard', 1);
+  };
 
-      const shareLink = post?.commentsPermalink;
-      const copyLink = async () => {
-        console.log('copied')
-        await navigator.clipboard.writeText(shareLink);
-        onMessage('✅ Copied link to clipboard',1);
-      };
-
-      const onShareOrCopyLink = useShareOrCopyLink({
-        link: shareLink,
-        text: post?.title,
-        copyLink,
-        trackObject: () =>
-          postAnalyticsEvent('share post', post, {
-            extra: { origin: 'post card' },
-          }),
-      });
+  const onShareOrCopyLink = useShareOrCopyLink({
+    link: shareLink,
+    text: post?.title,
+    copyLink,
+    trackObject: () =>
+      postAnalyticsEvent('share post', post, {
+        extra: { origin: 'post card' },
+      }),
+  });
   const card = (
     <Card
       {...props}

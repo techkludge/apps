@@ -76,7 +76,7 @@ export type FeedItemComponentProps = {
     column: number,
   ) => unknown;
   onAdClick: (ad: Ad, index: number, row: number, column: number) => void;
-  onMessage,
+  onMessage;
 };
 
 export function getFeedItemKey(items: FeedItem[], index: number): string {
