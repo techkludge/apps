@@ -10,7 +10,6 @@ import dynamic from 'next/dynamic';
 import { Post } from '../../graphql/posts';
 import {
   Card,
-  CardFooter,
   CardHeader,
   CardImage,
   CardNotification,
@@ -31,10 +30,6 @@ import SourceButton from './SourceButton';
 import PostAuthor from './PostAuthor';
 import OptionsButton from '../buttons/OptionsButton';
 import { ProfilePicture } from '../ProfilePicture';
-import { Button } from '../buttons/Button';
-import { useShareOrCopyLink } from '../../hooks/useShareOrCopyLink';
-import useNotification from '../../hooks/useNotification';
-import { postAnalyticsEvent } from '../../lib/feed';
 
 const FeaturedComment = dynamic(() => import('./FeaturedComment'));
 
@@ -55,11 +50,6 @@ export type PostCardProps = {
   notification?: string;
   showImage?: boolean;
   postHeadingFont: string;
-  onMessage?: (
-    message: string,
-    postIndex: number,
-    timeout?: number,
-  ) => Promise<unknown>;
 } & HTMLAttributes<HTMLDivElement>;
 
 export const PostCard = forwardRef(function PostCard(
@@ -81,7 +71,6 @@ export const PostCard = forwardRef(function PostCard(
     showImage = true,
     style,
     postHeadingFont,
-    onMessage,
     ...props
   }: PostCardProps,
   ref: Ref<HTMLElement>,
@@ -91,25 +80,6 @@ export const PostCard = forwardRef(function PostCard(
 
   const customStyle =
     selectedComment && !showImage ? { minHeight: '15.125rem' } : {};
-    
-
-
-      const shareLink = post?.commentsPermalink;
-      const copyLink = async () => {
-        console.log('copied')
-        await navigator.clipboard.writeText(shareLink);
-        onMessage('✅ Copied link to clipboard',1);
-      };
-
-      const onShareOrCopyLink = useShareOrCopyLink({
-        link: shareLink,
-        text: post?.title,
-        copyLink,
-        trackObject: () =>
-          postAnalyticsEvent('share post', post, {
-            extra: { origin: 'post card' },
-          }),
-      });
   const card = (
     <Card
       {...props}
@@ -125,7 +95,17 @@ export const PostCard = forwardRef(function PostCard(
               {notification}
             </CardNotification>
           ) : (
-            ''
+            <>
+              <SourceButton post={post} style={{ marginRight: '0.875rem' }} />
+              {featuredCommentsToButtons(
+                post.featuredComments,
+                setSelectedComment,
+              )}
+              <OptionsButton
+                onClick={(event) => onMenuClick?.(event, post)}
+                post={post}
+              />
+            </>
           )}
         </CardHeader>
         <CardTitle className={classNames(className, postHeadingFont)}>
@@ -137,19 +117,6 @@ export const PostCard = forwardRef(function PostCard(
         createdAt={post.createdAt}
         readTime={post.readTime}
         className="mx-4"
-      />
-      <ActionButtons
-        post={post}
-        onUpvoteClick={onUpvoteClick}
-        onCommentClick={onCommentClick}
-        onBookmarkClick={onBookmarkClick}
-        onMenuClick={onMenuClick}
-        showShare={showShare}
-        onShare={onShare}
-        className={classNames(
-          'justify-between mt-[1.625rem]',
-          !showImage && 'mt-4',
-        )}
       />
       {!showImage && (
         <PostAuthor
@@ -165,30 +132,33 @@ export const PostCard = forwardRef(function PostCard(
           fallbackSrc="https://res.cloudinary.com/daily-now/image/upload/f_auto/v1/placeholders/1"
           className="my-2"
         >
-          <CardFooter>
-            <SourceButton
-              post={post}
-              style={{ marginRight: '0.875rem' }}
-              className="mx-1 mb-1"
-            />
-            {featuredCommentsToButtons(
-              post.featuredComments,
-              setSelectedComment,
-            )}
-            {post.author && (
+          {post.author && (
+            <div
+              className={classNames(
+                'absolute flex items-center py-2 px-3 text-theme-label-secondary bg-theme-bg-primary z-1 font-bold typo-callout w-full',
+                selectedComment ? 'invisible' : styles.authorBox,
+              )}
+            >
               <ProfilePicture
-                className="rounded-12"
-                size="medium"
+                className="rounded-full"
+                size="small"
                 user={post.author}
               />
-            )}
-            <Button className="btn-primary" onClick={onShareOrCopyLink}>
-              {post.commentsPermalink}
-            </Button>
-          </CardFooter>
+              <span className="flex-1 mx-3 truncate">{post.author.name}</span>
+              <FeatherIcon className="text-2xl text-theme-status-help" />
+            </div>
+          )}
         </CardImage>
       )}
-
+      <ActionButtons
+        post={post}
+        onUpvoteClick={onUpvoteClick}
+        onCommentClick={onCommentClick}
+        onBookmarkClick={onBookmarkClick}
+        showShare={showShare}
+        onShare={onShare}
+        className={classNames('justify-between mx-4', !showImage && 'mt-4')}
+      />
       {selectedComment && (
         <FeaturedComment
           comment={selectedComment}

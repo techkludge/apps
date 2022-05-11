@@ -39,8 +39,12 @@ export const Card = classed(
 
 export const CardHeader = classed(
   'div',
-  styles.header,
-  'flex h-8 items-center my-1 -mx-1.5',
+  'flex items-center my-1 -mx-1.5',
+);
+
+export const CardFooter = classed(
+  'div',
+  'flex flex-row absolute bottom-0 left-0',
 );
 
 export const ListCard = classed(

@@ -76,6 +76,7 @@ export type FeedItemComponentProps = {
     column: number,
   ) => unknown;
   onAdClick: (ad: Ad, index: number, row: number, column: number) => void;
+  onMessage,
 };
 
 export function getFeedItemKey(items: FeedItem[], index: number): string {
@@ -119,6 +120,7 @@ export default function FeedItemComponent({
   onCommentClick,
   onAdClick,
   postHeadingFont,
+  onMessage,
 }: FeedItemComponentProps): ReactElement {
   const PostTag = useList ? PostList : PostCard;
   const AdTag = useList ? AdList : AdCard;
@@ -161,6 +163,7 @@ export default function FeedItemComponent({
           showImage={!insaneMode}
           onCommentClick={(post) => onCommentClick(post, index, row, column)}
           postHeadingFont={postHeadingFont}
+          onMessage={onMessage}
         >
           {showCommentPopupId === item.post.id && (
             <CommentPopup

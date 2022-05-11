@@ -321,6 +321,7 @@ export default function Feed<T>({
             onCommentClick={onCommentClick}
             onAdClick={onAdClick}
             postHeadingFont={postHeadingFont}
+            onMessage={onMessage}
           />
         ))}
       </div>

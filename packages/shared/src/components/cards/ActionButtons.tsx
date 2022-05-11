@@ -11,6 +11,8 @@ import CommentIcon from '../../../icons/comment.svg';
 import BookmarkIcon from '../../../icons/bookmark.svg';
 import { Button } from '../buttons/Button';
 import { SimpleTooltip } from '../tooltips/SimpleTooltip';
+import OptionsButton from '../buttons/OptionsButton';
+import MenuIcon from '../../../icons/menu.svg';
 
 const ShareIcon = dynamic(() => import('../../../icons/share.svg'));
 
@@ -23,6 +25,7 @@ export type ActionButtonsProps = {
   onShare?: (post: Post) => unknown;
   className?: string;
   children?: ReactNode;
+  onMenuClick?: (event: React.MouseEvent, post: Post) => unknown;
 };
 
 export default function ActionButtons({
@@ -34,6 +37,7 @@ export default function ActionButtons({
   onShare,
   className,
   children,
+  onMenuClick,
 }: ActionButtonsProps): ReactElement {
   return (
     <div
@@ -43,43 +47,63 @@ export default function ActionButtons({
         className,
       )}
     >
-      <SimpleTooltip content={post.upvoted ? 'Remove upvote' : 'Upvote'}>
-        <QuaternaryButton
-          id={`post-${post.id}-upvote-btn`}
-          icon={<UpvoteIcon />}
-          buttonSize="small"
-          pressed={post.upvoted}
-          onClick={() => onUpvoteClick?.(post, !post.upvoted)}
-          style={{ width: rem(78) }}
-          className="btn-tertiary-avocado"
-        >
-          <InteractionCounter value={post.numUpvotes > 0 && post.numUpvotes} />
-        </QuaternaryButton>
-      </SimpleTooltip>
-      <SimpleTooltip content="Comments">
-        <QuaternaryButton
-          id={`post-${post.id}-comment-btn`}
-          icon={<CommentIcon />}
-          buttonSize="small"
-          pressed={post.commented}
-          onClick={() => onCommentClick?.(post)}
-          style={{ width: rem(78) }}
-          className="btn-tertiary-avocado"
-        >
-          <InteractionCounter
-            value={post.numComments > 0 && post.numComments}
-          />
-        </QuaternaryButton>
-      </SimpleTooltip>
+      <Button className="mouse:group-hover:visible btn-tertiary">
+        <div className="flex">
+          <SimpleTooltip content={post.upvoted ? 'Remove upvote' : 'Upvote'}>
+            <QuaternaryButton
+              id={`post-${post.id}-upvote-btn`}
+              icon={<UpvoteIcon />}
+              buttonSize="small"
+              pressed={post.upvoted}
+              onClick={() => onUpvoteClick?.(post, !post.upvoted)}
+              style={{ width: rem(78) }}
+              className="btn-tertiary-avocado"
+            >
+              <InteractionCounter
+                value={post.numUpvotes > 0 && post.numUpvotes}
+              />
+            </QuaternaryButton>
+          </SimpleTooltip>
+          <SimpleTooltip content="Comments">
+            <QuaternaryButton
+              id={`post-${post.id}-comment-btn`}
+              icon={<CommentIcon />}
+              buttonSize="small"
+              pressed={post.commented}
+              onClick={() => onCommentClick?.(post)}
+              style={{ width: rem(78) }}
+              className="btn-tertiary-avocado"
+            >
+              <InteractionCounter
+                value={post.numComments > 0 && post.numComments}
+              />
+            </QuaternaryButton>
+          </SimpleTooltip>
+        </div>
+      </Button>
+
       <SimpleTooltip content={post.bookmarked ? 'Remove bookmark' : 'Bookmark'}>
         <Button
           icon={<BookmarkIcon />}
           buttonSize="small"
           pressed={post.bookmarked}
           onClick={() => onBookmarkClick?.(post, !post.bookmarked)}
-          className="btn-tertiary-bun"
+          className="mouse:invisible mouse:group-hover:visible my-auto btn-tertiary-bun"
         />
       </SimpleTooltip>
+      <SimpleTooltip content="Options">
+        <Button
+          className="mouse:invisible mouse:group-hover:visible my-auto btn-tertiary"
+          style={{ marginLeft: 'auto', marginRight: '-0.125rem' }}
+          icon={<MenuIcon />}
+          onClick={(event) => onMenuClick?.(event, post)}
+          buttonSize="small"
+        />
+      </SimpleTooltip>
+      {/* <OptionsButton
+        post={post}
+        onClick={(event) => onMenuClick?.(event, post)}
+      ></OptionsButton> */}
       {showShare && (
         <SimpleTooltip content="Share post">
           <Button
