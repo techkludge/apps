@@ -3,6 +3,7 @@ import React, {
   HTMLAttributes,
   ReactElement,
   Ref,
+  useContext,
   useState,
 } from 'react';
 import classNames from 'classnames';
@@ -23,15 +24,19 @@ import {
 import { Comment } from '../../graphql/comments';
 import styles from './Card.module.css';
 import TrendingFlag from './TrendingFlag';
-import PostLink from './PostLink';
 import PostMetadata from './PostMetadata';
 import ActionButtons from './ActionButtons';
 import SourceButton from './SourceButton';
 import PostAuthor from './PostAuthor';
-import { ProfilePicture } from '../ProfilePicture';
 import { Button } from '../buttons/Button';
-import { useShareOrCopyLink } from '../../hooks/useShareOrCopyLink';
-import { postAnalyticsEvent } from '../../lib/feed';
+import OpenLinkIcon from '../../../icons/open_link.svg';
+import ModalPostLink from './ModalPostLink';
+import { ProfileTooltip } from '../profile/ProfileTooltip';
+import { ProfileImageLink } from '../profile/ProfileImageLink';
+import PostLink from './PostLink';
+import AnalyticsContext from '../../contexts/AnalyticsContext';
+import { Features, isFeaturedEnabled } from '../../lib/featureManagement';
+import FeaturesContext from '../../contexts/FeaturesContext';
 
 const FeaturedComment = dynamic(() => import('./FeaturedComment'));
 
@@ -52,11 +57,6 @@ export type PostCardProps = {
   notification?: string;
   showImage?: boolean;
   postHeadingFont: string;
-  onMessage?: (
-    message: string,
-    postIndex: number,
-    timeout?: number,
-  ) => Promise<unknown>;
 } & HTMLAttributes<HTMLDivElement>;
 
 export const PostCard = forwardRef(function PostCard(
@@ -78,7 +78,6 @@ export const PostCard = forwardRef(function PostCard(
     showImage = true,
     style,
     postHeadingFont,
-    onMessage,
     ...props
   }: PostCardProps,
   ref: Ref<HTMLElement>,
@@ -89,21 +88,23 @@ export const PostCard = forwardRef(function PostCard(
   const customStyle =
     selectedComment && !showImage ? { minHeight: '15.125rem' } : {};
 
-  const shareLink = post?.commentsPermalink;
-  const copyLink = async () => {
-    await navigator.clipboard.writeText(shareLink);
-    onMessage('✅ Copied link to clipboard', 1);
+  const { trackEvent } = useContext(AnalyticsContext);
+  const { flags } = useContext(FeaturesContext);
+
+  // const isArticleModalByDefault = isFeaturedEnabled(
+  //   Features.ArticleModalByDefault,
+  //   flags,
+  // );
+
+  const isArticleModalByDefault = true;
+
+  const onOpenArticlePage = () => {
+    trackEvent({
+      eventName: 'go to link',
+      post: post,
+    });
   };
 
-  const onShareOrCopyLink = useShareOrCopyLink({
-    link: shareLink,
-    text: post?.title,
-    copyLink,
-    trackObject: () =>
-      postAnalyticsEvent('share post', post, {
-        extra: { origin: 'post card' },
-      }),
-  });
   const card = (
     <Card
       {...props}
@@ -111,7 +112,16 @@ export const PostCard = forwardRef(function PostCard(
       style={{ ...style, ...customStyle }}
       ref={ref}
     >
-      <PostLink post={post} openNewTab={openNewTab} onLinkClick={onLinkClick} />
+      {isArticleModalByDefault ? (
+        <ModalPostLink post={post} onLinkClick={onCommentClick} />
+      ) : (
+        <PostLink
+          post={post}
+          openNewTab={openNewTab}
+          onLinkClick={onLinkClick}
+        />
+      )}
+
       <CardTextContainer>
         <CardHeader>
           {notification ? (
@@ -160,25 +170,39 @@ export const PostCard = forwardRef(function PostCard(
           className="my-2"
         >
           <CardFooter>
-            <SourceButton
-              post={post}
-              style={{ marginRight: '0.875rem' }}
-              className="mx-1 mb-1"
-            />
-            {featuredCommentsToButtons(
-              post.featuredComments,
-              setSelectedComment,
+            <div className="flex mb-1 mx-1">
+              <SourceButton post={post} style={{ marginRight: '0.25rem' }} />
+              {featuredCommentsToButtons(
+                post.featuredComments,
+                setSelectedComment,
+              )}
+              {post.author && (
+                <ProfileTooltip
+                  user={post.author}
+                  tooltip={{ appendTo: document?.body }}
+                >
+                  <ProfileImageLink
+                    user={post.author}
+                    picture={{ size: 'medium' }}
+                  />
+                </ProfileTooltip>
+              )}
+            </div>
+            {isArticleModalByDefault && (
+              <div>
+                <Button
+                  className="mouse:invisible mouse:group-hover:visible btn-primary"
+                  buttonSize="small"
+                  rightIcon={<OpenLinkIcon />}
+                  tag="a"
+                  href={post.permalink}
+                  target="_blank"
+                  onClick={onOpenArticlePage}
+                >
+                  <p className="truncate w-28">{post.commentsPermalink}</p>
+                </Button>
+              </div>
             )}
-            {post.author && (
-              <ProfilePicture
-                className="rounded-12"
-                size="medium"
-                user={post.author}
-              />
-            )}
-            <Button className="btn-primary" onClick={onShareOrCopyLink}>
-              {post.commentsPermalink}
-            </Button>
           </CardFooter>
         </CardImage>
       )}
@@ -206,3 +230,7 @@ export const PostCard = forwardRef(function PostCard(
   }
   return card;
 });
+function flags(HideSignupProfileImage: Features, flags: any) {
+  throw new Error('Function not implemented.');
+}
+

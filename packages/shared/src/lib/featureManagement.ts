@@ -98,6 +98,23 @@ export class Features {
     'v5',
   ]);
 
+  static readonly PostCardVersion = new Features('post_card_version', 'v1', [
+    'v1',
+    'v2',
+  ]);
+
+  static readonly ArticleModalByDefault = new Features(
+    'article_modal_by_default',
+  );
+
+  static readonly ClickableEngagement = new Features('clickable_engagement');
+
+  static readonly PostCardUpvotesCommentsButton = new Features(
+    'post_card_upvotes_comments_button',
+    'clickable',
+    ['nonClickable'],
+  );
+
   private constructor(
     public readonly id: string,
     public readonly defaultValue?: string,

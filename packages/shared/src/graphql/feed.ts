@@ -22,9 +22,12 @@ export const FEED_POST_FRAGMENT = gql`
     numUpvotes
     commentsPermalink
     author {
+      id
       name
       image
       username
+      permalink
+      bio
     }
     featuredComments {
       id
