@@ -1,7 +1,6 @@
 import React, { forwardRef, ReactElement, Ref, useState } from 'react';
 import classNames from 'classnames';
 import { Comment } from '../../graphql/comments';
-import { PostCardProps } from './PostCard';
 import {
   getPostClassNames,
   ListCard,
@@ -21,6 +20,7 @@ import ListFeaturedComment from './ListFeaturedComment';
 import TrendingFlag from './TrendingFlag';
 import PostAuthor from './PostAuthor';
 import PostOptions from '../buttons/OptionsButton';
+import { PostCardProps } from './PostCard';
 
 export const PostList = forwardRef(function PostList(
   {
@@ -87,7 +87,7 @@ export const PostList = forwardRef(function PostList(
           onBookmarkClick={onBookmarkClick}
           showShare={showShare}
           onShare={onShare}
-          className="relative self-stretch mt-1"
+          className="relative self-stretch mt-1 ml-0"
         >
           <PostOptions
             onClick={(event) => onMenuClick?.(event, post)}

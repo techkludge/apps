@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, RenderResult, screen, waitFor } from '@testing-library/react';
 import { Post } from '../../graphql/posts';
-import { PostCard, PostCardProps } from './PostCard';
+import { PostCard, PostCardProps } from './PostCardNew';
 
 const defaultPost: Post = {
   id: 'e3fd75b62cadd02073a31ee3444975cc',

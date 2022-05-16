@@ -1,7 +1,8 @@
 import React, { ReactElement } from 'react';
 import dynamic from 'next/dynamic';
 import { FeedItem } from '../hooks/useFeed';
-import { PostList } from './cards/PostList';
+import { PostListNew } from './cards/PostListNew';
+import { PostCardNew } from './cards/PostCardNew';
 import { PostCard } from './cards/PostCard';
 import { AdList } from './cards/AdList';
 import { AdCard } from './cards/AdCard';
@@ -11,6 +12,7 @@ import { Ad, Post } from '../graphql/posts';
 import { LoggedUser } from '../lib/user';
 import { CommentOnData } from '../graphql/comments';
 import useTrackImpression from '../hooks/feed/useTrackImpression';
+import { PostList } from './cards/PostList';
 
 const CommentPopup = dynamic(() => import('./cards/CommentPopup'));
 
@@ -120,14 +122,16 @@ export default function FeedItemComponent({
   onAdClick,
   postHeadingFont,
 }: FeedItemComponentProps): ReactElement {
-  const isV1 = true;
+  const isV1 = false;
+  const isArticleModalByDefault = true;
   const PostTag = useList
     ? isV1
       ? PostList
-      : PostList
+      : PostListNew
     : isV1
     ? PostCard
-    : PostCard;
+    : PostCardNew;
+
   const AdTag = useList ? AdList : AdCard;
   const PlaceholderTag = useList ? PlaceholderList : PlaceholderCard;
   const item = items[index];
@@ -168,6 +172,7 @@ export default function FeedItemComponent({
           showImage={!insaneMode}
           onCommentClick={(post) => onCommentClick(post, index, row, column)}
           postHeadingFont={postHeadingFont}
+          isArticleModalByDefault={isArticleModalByDefault}
         >
           {showCommentPopupId === item.post.id && (
             <CommentPopup

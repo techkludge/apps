@@ -11,7 +11,6 @@ import CommentIcon from '../../../icons/comment.svg';
 import BookmarkIcon from '../../../icons/bookmark.svg';
 import { Button } from '../buttons/Button';
 import { SimpleTooltip } from '../tooltips/SimpleTooltip';
-import MenuIcon from '../../../icons/menu.svg';
 
 const ShareIcon = dynamic(() => import('../../../icons/share.svg'));
 
@@ -25,6 +24,7 @@ export type ActionButtonsProps = {
   className?: string;
   children?: ReactNode;
   onMenuClick?: (event: React.MouseEvent, post: Post) => unknown;
+  bookmarkStyle?: string;
 };
 
 export default function ActionButtons({
@@ -35,39 +35,40 @@ export default function ActionButtons({
   onBookmarkClick,
   onShare,
   className,
+  bookmarkStyle,
   children,
-  onMenuClick,
 }: ActionButtonsProps): ReactElement {
-  const canUpvoteAndComment = false;
+  const canUpvoteAndComment = true;
 
   const upvotesAndCommentsStatic = (
-    <SimpleTooltip content="Example text">
-      <Button
-        className="mouse:group-hover:visible btn-tertiary w-40 flex"
-        onClick={() => onCommentClick?.(post)}
-      >
-        <div className="flex">
+    <div className="flex px-6">
+      <SimpleTooltip content={post.upvoted ? 'Remove upvote' : 'Upvote'}>
+        <div className="flex items-center">
           <span
             id={`post-${post.id}-upvote-btn`}
             style={{ marginRight: rem(15) }}
             className="flex"
           >
-            <UpvoteIcon />
+            <UpvoteIcon className="text-xl" />
           </span>
           <InteractionCounter value={post.numUpvotes > 0 && post.numUpvotes} />
+        </div>
+      </SimpleTooltip>
+      <SimpleTooltip content="Comments">
+        <div className="flex items-center">
           <span
             id={`post-${post.id}-comment-btn`}
             style={{ marginLeft: rem(30), marginRight: rem(15) }}
             className="flex"
           >
-            <CommentIcon />
+            <CommentIcon className="text-xl" />
           </span>
           <InteractionCounter
             value={post.numComments > 0 && post.numComments}
           />
         </div>
-      </Button>
-    </SimpleTooltip>
+      </SimpleTooltip>
+    </div>
   );
 
   const upvotesAndCommentsButtons = (
@@ -108,7 +109,6 @@ export default function ActionButtons({
       className={classNames(
         styles.actionButtons,
         'flex flex-row items-center',
-        canUpvoteAndComment && 'ml-4',
         className,
       )}
     >
@@ -118,23 +118,18 @@ export default function ActionButtons({
 
       <SimpleTooltip content={post.bookmarked ? 'Remove bookmark' : 'Bookmark'}>
         <Button
-          className="mouse:invisible mouse:group-hover:visible my-auto btn-tertiary-bun"
-          style={canUpvoteAndComment ? {} : { marginRight: '-3rem' }}
+          className={classNames(
+            'my-auto btn-tertiary-bun',
+            bookmarkStyle
+          )}
           icon={<BookmarkIcon />}
           buttonSize="small"
           pressed={post.bookmarked}
           onClick={() => onBookmarkClick?.(post, !post.bookmarked)}
         />
       </SimpleTooltip>
-      <SimpleTooltip content="Options">
-        <Button
-          className="mouse:invisible mouse:group-hover:visible my-auto btn-tertiary"
-          style={{ marginRight: '1rem', marginLeft: '0.5rem' }}
-          icon={<MenuIcon />}
-          onClick={(event) => onMenuClick?.(event, post)}
-          buttonSize="small"
-        />
-      </SimpleTooltip>
+      
+
       {showShare && (
         <SimpleTooltip content="Share post">
           <Button

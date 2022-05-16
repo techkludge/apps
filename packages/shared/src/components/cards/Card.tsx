@@ -21,6 +21,8 @@ export const ListCardTitle = classed(Title, 'mr-2');
 
 export const CardTextContainer = classed('div', 'flex flex-col mx-4');
 
+export const NewCardTextContainer = classed('div', 'flex flex-col mx-6');
+
 export const CardImage = classed(LazyImage, 'rounded-xl h-40');
 
 export const CardSpace = classed('div', 'flex-1');

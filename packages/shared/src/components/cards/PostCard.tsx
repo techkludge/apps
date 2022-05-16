@@ -3,7 +3,6 @@ import React, {
   HTMLAttributes,
   ReactElement,
   Ref,
-  useContext,
   useState,
 } from 'react';
 import classNames from 'classnames';
@@ -11,7 +10,6 @@ import dynamic from 'next/dynamic';
 import { Post } from '../../graphql/posts';
 import {
   Card,
-  CardFooter,
   CardHeader,
   CardImage,
   CardNotification,
@@ -21,22 +19,17 @@ import {
   featuredCommentsToButtons,
   getPostClassNames,
 } from './Card';
+import FeatherIcon from '../../../icons/feather.svg';
 import { Comment } from '../../graphql/comments';
 import styles from './Card.module.css';
 import TrendingFlag from './TrendingFlag';
+import PostLink from './PostLink';
 import PostMetadata from './PostMetadata';
 import ActionButtons from './ActionButtons';
 import SourceButton from './SourceButton';
 import PostAuthor from './PostAuthor';
-import { Button } from '../buttons/Button';
-import OpenLinkIcon from '../../../icons/open_link.svg';
-import ModalPostLink from './ModalPostLink';
-import { ProfileTooltip } from '../profile/ProfileTooltip';
-import { ProfileImageLink } from '../profile/ProfileImageLink';
-import PostLink from './PostLink';
-import AnalyticsContext from '../../contexts/AnalyticsContext';
-import { Features, isFeaturedEnabled } from '../../lib/featureManagement';
-import FeaturesContext from '../../contexts/FeaturesContext';
+import OptionsButton from '../buttons/OptionsButton';
+import { ProfilePicture } from '../ProfilePicture';
 
 const FeaturedComment = dynamic(() => import('./FeaturedComment'));
 
@@ -57,6 +50,8 @@ export type PostCardProps = {
   notification?: string;
   showImage?: boolean;
   postHeadingFont: string;
+  isArticleModalByDefault: boolean;
+  bookmarkStyle?: string;
 } & HTMLAttributes<HTMLDivElement>;
 
 export const PostCard = forwardRef(function PostCard(
@@ -78,6 +73,7 @@ export const PostCard = forwardRef(function PostCard(
     showImage = true,
     style,
     postHeadingFont,
+    isArticleModalByDefault,
     ...props
   }: PostCardProps,
   ref: Ref<HTMLElement>,
@@ -87,24 +83,6 @@ export const PostCard = forwardRef(function PostCard(
 
   const customStyle =
     selectedComment && !showImage ? { minHeight: '15.125rem' } : {};
-
-  const { trackEvent } = useContext(AnalyticsContext);
-  const { flags } = useContext(FeaturesContext);
-
-  // const isArticleModalByDefault = isFeaturedEnabled(
-  //   Features.ArticleModalByDefault,
-  //   flags,
-  // );
-
-  const isArticleModalByDefault = true;
-
-  const onOpenArticlePage = () => {
-    trackEvent({
-      eventName: 'go to link',
-      post: post,
-    });
-  };
-
   const card = (
     <Card
       {...props}
@@ -112,16 +90,7 @@ export const PostCard = forwardRef(function PostCard(
       style={{ ...style, ...customStyle }}
       ref={ref}
     >
-      {isArticleModalByDefault ? (
-        <ModalPostLink post={post} onLinkClick={onCommentClick} />
-      ) : (
-        <PostLink
-          post={post}
-          openNewTab={openNewTab}
-          onLinkClick={onLinkClick}
-        />
-      )}
-
+      <PostLink post={post} openNewTab={openNewTab} onLinkClick={onLinkClick} />
       <CardTextContainer>
         <CardHeader>
           {notification ? (
@@ -129,7 +98,17 @@ export const PostCard = forwardRef(function PostCard(
               {notification}
             </CardNotification>
           ) : (
-            ''
+            <>
+              <SourceButton post={post} style={{ marginRight: '0.875rem' }} />
+              {featuredCommentsToButtons(
+                post.featuredComments,
+                setSelectedComment,
+              )}
+              <OptionsButton
+                onClick={(event) => onMenuClick?.(event, post)}
+                post={post}
+              />
+            </>
           )}
         </CardHeader>
         <CardTitle className={classNames(className, postHeadingFont)}>
@@ -141,19 +120,6 @@ export const PostCard = forwardRef(function PostCard(
         createdAt={post.createdAt}
         readTime={post.readTime}
         className="mx-4"
-      />
-      <ActionButtons
-        post={post}
-        onUpvoteClick={onUpvoteClick}
-        onCommentClick={onCommentClick}
-        onBookmarkClick={onBookmarkClick}
-        onMenuClick={onMenuClick}
-        showShare={showShare}
-        onShare={onShare}
-        className={classNames(
-          'justify-between mt-[1.625rem]',
-          !showImage && 'mt-4',
-        )}
       />
       {!showImage && (
         <PostAuthor
@@ -169,44 +135,33 @@ export const PostCard = forwardRef(function PostCard(
           fallbackSrc="https://res.cloudinary.com/daily-now/image/upload/f_auto/v1/placeholders/1"
           className="my-2"
         >
-          <CardFooter>
-            <div className="flex mb-1 mx-1">
-              <SourceButton post={post} style={{ marginRight: '0.25rem' }} />
-              {featuredCommentsToButtons(
-                post.featuredComments,
-                setSelectedComment,
+          {post.author && (
+            <div
+              className={classNames(
+                'absolute flex items-center py-2 px-3 text-theme-label-secondary bg-theme-bg-primary z-1 font-bold typo-callout w-full',
+                selectedComment ? 'invisible' : styles.authorBox,
               )}
-              {post.author && (
-                <ProfileTooltip
-                  user={post.author}
-                  tooltip={{ appendTo: document?.body }}
-                >
-                  <ProfileImageLink
-                    user={post.author}
-                    picture={{ size: 'medium' }}
-                  />
-                </ProfileTooltip>
-              )}
+            >
+              <ProfilePicture
+                className="rounded-full"
+                size="small"
+                user={post.author}
+              />
+              <span className="flex-1 mx-3 truncate">{post.author.name}</span>
+              <FeatherIcon className="text-2xl text-theme-status-help" />
             </div>
-            {isArticleModalByDefault && (
-              <div>
-                <Button
-                  className="mouse:invisible mouse:group-hover:visible btn-primary"
-                  buttonSize="small"
-                  rightIcon={<OpenLinkIcon />}
-                  tag="a"
-                  href={post.permalink}
-                  target="_blank"
-                  onClick={onOpenArticlePage}
-                >
-                  <p className="truncate w-28">{post.commentsPermalink}</p>
-                </Button>
-              </div>
-            )}
-          </CardFooter>
+          )}
         </CardImage>
       )}
-
+      <ActionButtons
+        post={post}
+        onUpvoteClick={onUpvoteClick}
+        onCommentClick={onCommentClick}
+        onBookmarkClick={onBookmarkClick}
+        showShare={showShare}
+        onShare={onShare}
+        className={classNames('justify-between mx-4', !showImage && 'mt-4')}
+      />
       {selectedComment && (
         <FeaturedComment
           comment={selectedComment}
@@ -230,7 +185,3 @@ export const PostCard = forwardRef(function PostCard(
   }
   return card;
 });
-function flags(HideSignupProfileImage: Features, flags: any) {
-  throw new Error('Function not implemented.');
-}
-
