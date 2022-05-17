@@ -7,6 +7,7 @@ import { PostCard } from './cards/PostCard';
 import { AdList } from './cards/AdList';
 import { AdCard } from './cards/AdCard';
 import { PlaceholderList } from './cards/PlaceholderList';
+import { PlaceholderListNew } from './cards/PlaceholderListNew';
 import { PlaceholderCard } from './cards/PlaceholderCard';
 import { PlaceholderCardNew } from './cards/PlaceholderCardNew';
 import { Ad, Post } from '../graphql/posts';
@@ -134,7 +135,13 @@ export default function FeedItemComponent({
     : PostCardNew;
 
   const AdTag = useList ? AdList : AdCard;
-  const PlaceholderTag = useList ? PlaceholderList : PlaceholderCardNew;
+  const PlaceholderTag = useList
+    ? isV1
+      ? PlaceholderList
+      : PlaceholderListNew
+    : isV1
+    ? PlaceholderCard
+    : PlaceholderCardNew;
   const item = items[index];
   const inViewRef = useTrackImpression(
     item,

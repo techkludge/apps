@@ -78,7 +78,7 @@ export const PostCardNew = forwardRef(function PostCardNew(
     selectedComment && !showImage ? { minHeight: '15.125rem' } : {};
 
   const { trackEvent } = useContext(AnalyticsContext);
- 
+
   const onOpenArticlePage = () => {
     trackEvent({
       eventName: 'go to link',
@@ -94,7 +94,7 @@ export const PostCardNew = forwardRef(function PostCardNew(
       ref={ref}
     >
       {isArticleModalByDefault ? (
-        <ModalPostLink post={post} onLinkClick={onCommentClick} />
+        <ModalPostLink post={post} onLinkClick={onCommentClick}/>
       ) : (
         <PostLink
           post={post}
@@ -183,19 +183,17 @@ export const PostCardNew = forwardRef(function PostCardNew(
               )}
             </div>
             {isArticleModalByDefault && (
-              <div>
-                <Button
-                  className="mouse:invisible mouse:group-hover:visible btn-primary"
-                  buttonSize="small"
-                  rightIcon={<OpenLinkIcon />}
-                  tag="a"
-                  href={post.permalink}
-                  target="_blank"
-                  onClick={onOpenArticlePage}
-                >
-                  <p className="truncate w-28">{post.commentsPermalink}</p>
-                </Button>
-              </div>
+              <Button
+                className="mouse:invisible mouse:group-hover:visible btn-primary"
+                buttonSize="small"
+                rightIcon={<OpenLinkIcon />}
+                tag="a"
+                href={post.permalink}
+                target="_blank"
+                onClick={onOpenArticlePage}
+              >
+                <p className="truncate w-28">{post.commentsPermalink}</p>
+              </Button>
             )}
           </CardFooter>
         </CardImage>
