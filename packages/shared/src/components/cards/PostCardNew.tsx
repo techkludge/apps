@@ -123,8 +123,8 @@ export const PostCardNew = forwardRef(function PostCardNew(
         readTime={post.readTime}
         className="mx-6"
       />
-      <div className="flex between mt-5">
-        <div className="ml-4">
+      <div className="flex justify-between mt-5">
+        <div>
           <ActionButtons
             post={post}
             onUpvoteClick={onUpvoteClick}

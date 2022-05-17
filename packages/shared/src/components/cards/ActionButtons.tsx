@@ -38,16 +38,15 @@ export default function ActionButtons({
   bookmarkStyle,
   children,
 }: ActionButtonsProps): ReactElement {
-  const canUpvoteAndComment = true;
+  const canUpvoteAndComment = false;
 
   const upvotesAndCommentsStatic = (
-    <div className="flex px-6">
+    <div className="flex">
       <SimpleTooltip content={post.upvoted ? 'Remove upvote' : 'Upvote'}>
-        <div className="flex items-center">
+        <div className="flex items-center" style={{ width: rem(78) }}>
           <span
             id={`post-${post.id}-upvote-btn`}
-            style={{ marginRight: rem(15) }}
-            className="flex"
+            className="flex mr-2"
           >
             <UpvoteIcon className="text-xl" />
           </span>
@@ -55,11 +54,10 @@ export default function ActionButtons({
         </div>
       </SimpleTooltip>
       <SimpleTooltip content="Comments">
-        <div className="flex items-center">
+        <div className="flex items-center" style={{ width: rem(78) }}>
           <span
             id={`post-${post.id}-comment-btn`}
-            style={{ marginLeft: rem(30), marginRight: rem(15) }}
-            className="flex"
+            className="flex mr-2"
           >
             <CommentIcon className="text-xl" />
           </span>
