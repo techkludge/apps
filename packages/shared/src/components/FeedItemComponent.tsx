@@ -8,6 +8,7 @@ import { AdList } from './cards/AdList';
 import { AdCard } from './cards/AdCard';
 import { PlaceholderList } from './cards/PlaceholderList';
 import { PlaceholderCard } from './cards/PlaceholderCard';
+import { PlaceholderCardNew } from './cards/PlaceholderCardNew';
 import { Ad, Post } from '../graphql/posts';
 import { LoggedUser } from '../lib/user';
 import { CommentOnData } from '../graphql/comments';
@@ -122,7 +123,7 @@ export default function FeedItemComponent({
   onAdClick,
   postHeadingFont,
 }: FeedItemComponentProps): ReactElement {
-  const isV1 = true;
+  const isV1 = false;
   const isArticleModalByDefault = true;
   const PostTag = useList
     ? isV1
@@ -133,7 +134,7 @@ export default function FeedItemComponent({
     : PostCardNew;
 
   const AdTag = useList ? AdList : AdCard;
-  const PlaceholderTag = useList ? PlaceholderList : PlaceholderCard;
+  const PlaceholderTag = useList ? PlaceholderList : PlaceholderCardNew;
   const item = items[index];
   const inViewRef = useTrackImpression(
     item,

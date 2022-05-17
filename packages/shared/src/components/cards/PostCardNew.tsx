@@ -133,6 +133,7 @@ export const PostCardNew = forwardRef(function PostCardNew(
             onMenuClick={onMenuClick}
             showShare={showShare}
             onShare={onShare}
+            className={classNames('justify-between ml-4', !showImage && 'mt-4')}
             bookmarkStyle="mouse:invisible mouse:group-hover:visible"
           />
         </div>

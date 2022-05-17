@@ -54,7 +54,7 @@ export default function ActionButtons({
         </div>
       </SimpleTooltip>
       <SimpleTooltip content="Comments">
-        <div className="flex items-center" style={{ width: rem(78) }}>
+        <div className="flex items-center justify-end" style={{ width: rem(78) }}>
           <span
             id={`post-${post.id}-comment-btn`}
             className="flex mr-2"
@@ -103,30 +103,19 @@ export default function ActionButtons({
   );
 
   return (
-    <div
-      className={classNames(
-        styles.actionButtons,
-        'flex flex-row items-center',
-        className,
-      )}
-    >
+    <div className={classNames(styles.actionButtons, 'flex', className)}>
       {canUpvoteAndComment
         ? upvotesAndCommentsButtons
         : upvotesAndCommentsStatic}
-
       <SimpleTooltip content={post.bookmarked ? 'Remove bookmark' : 'Bookmark'}>
-        <Button
-          className={classNames(
-            'my-auto btn-tertiary-bun',
-            bookmarkStyle
-          )}
-          icon={<BookmarkIcon />}
-          buttonSize="small"
-          pressed={post.bookmarked}
-          onClick={() => onBookmarkClick?.(post, !post.bookmarked)}
-        />
+          <Button
+            className={classNames('my-auto btn-tertiary-bun', bookmarkStyle)}
+            icon={<BookmarkIcon />}
+            buttonSize="small"
+            pressed={post.bookmarked}
+            onClick={() => onBookmarkClick?.(post, !post.bookmarked)}
+          />
       </SimpleTooltip>
-      
 
       {showShare && (
         <SimpleTooltip content="Share post">

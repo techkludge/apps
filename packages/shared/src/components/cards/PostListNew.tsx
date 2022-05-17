@@ -126,6 +126,7 @@ export const PostListNew = forwardRef(function PostListNew(
             onBookmarkClick={onBookmarkClick}
             showShare={showShare}
             onShare={onShare}
+            className="ml-4"
             bookmarkStyle="mouse:invisible mouse:group-hover:visible"
           >
             <SimpleTooltip content="Options">
