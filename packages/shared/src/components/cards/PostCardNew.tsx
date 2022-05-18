@@ -94,7 +94,7 @@ export const PostCardNew = forwardRef(function PostCardNew(
       ref={ref}
     >
       {isArticleModalByDefault ? (
-        <ModalPostLink post={post} onLinkClick={onCommentClick}/>
+        <ModalPostLink post={post} onLinkClick={onCommentClick} />
       ) : (
         <PostLink
           post={post}
@@ -184,7 +184,7 @@ export const PostCardNew = forwardRef(function PostCardNew(
             </div>
             {isArticleModalByDefault && (
               <Button
-                className="mouse:invisible mouse:group-hover:visible btn-primary"
+                className=" mouse:group-hover:visible btn-primary w-[10.625rem]"
                 buttonSize="small"
                 rightIcon={<OpenLinkIcon />}
                 tag="a"
@@ -192,7 +192,9 @@ export const PostCardNew = forwardRef(function PostCardNew(
                 target="_blank"
                 onClick={onOpenArticlePage}
               >
-                <p className="truncate w-28">{post.commentsPermalink}</p>
+                <p className="truncate w-25">
+                  {post.commentsPermalink}
+                </p>
               </Button>
             )}
           </CardFooter>
