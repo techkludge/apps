@@ -30,6 +30,8 @@ import SourceButton from './SourceButton';
 import PostAuthor from './PostAuthor';
 import OptionsButton from '../buttons/OptionsButton';
 import { ProfilePicture } from '../ProfilePicture';
+import { Button } from '../buttons/Button';
+import OpenLinkIcon from '../../../icons/open_link.svg';
 
 const FeaturedComment = dynamic(() => import('./FeaturedComment'));
 
@@ -104,6 +106,19 @@ export const PostCard = forwardRef(function PostCard(
                 post.featuredComments,
                 setSelectedComment,
               )}
+              {isArticleModalByDefault && (
+                <Button
+                  className="mouse:invisible mouse:group-hover:visible btn-primary w-[10.625rem] ml-6"
+                  buttonSize="small"
+                  rightIcon={<OpenLinkIcon />}
+                  tag="a"
+                  href={post.permalink}
+                  target="_blank"
+                  // onClick={onOpenArticlePage}
+                >
+                  <p className="truncate w-28">{post.commentsPermalink}</p>
+                </Button>
+              )}
               <OptionsButton
                 onClick={(event) => onMenuClick?.(event, post)}
                 post={post}
@@ -160,7 +175,7 @@ export const PostCard = forwardRef(function PostCard(
         onBookmarkClick={onBookmarkClick}
         showShare={showShare}
         onShare={onShare}
-        className={classNames('justify-between mx-4', !showImage && 'mt-4')}
+        className={classNames('justify-between', !showImage && 'mt-4')}
       />
       {selectedComment && (
         <FeaturedComment

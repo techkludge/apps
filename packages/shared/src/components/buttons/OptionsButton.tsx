@@ -12,7 +12,7 @@ export default function OptionsButton({
   onClick?: (event: React.MouseEvent, post: Post) => unknown;
 }): ReactElement {
   return (
-    <SimpleTooltip placement="left" content="Options">
+    <SimpleTooltip placement="top" content="Options">
       <Button
         className="mouse:invisible mouse:group-hover:visible my-auto btn-tertiary"
         style={{ marginLeft: 'auto', marginRight: '-0.125rem' }}

@@ -124,8 +124,8 @@ export default function FeedItemComponent({
   onAdClick,
   postHeadingFont,
 }: FeedItemComponentProps): ReactElement {
-  const isV1 = false;
-  const isArticleModalByDefault = true;
+  const isV1 = true;
+  const isArticleModalByDefault = false;
   const PostTag = useList
     ? isV1
       ? PostList

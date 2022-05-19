@@ -69,6 +69,12 @@ export const CardNotification = classed(
   'px-4 py-1.5 -mx-1.5 rounded-10 bg-theme-label-primary text-theme-label-invert typo-callout font-bold',
 );
 
+export const UpvotesAndCommentsContainer = classed(
+  'div',
+  'flex items-center ml-2',
+);
+
+
 export const getPostClassNames = (
   post: Post,
   selectedComment: Comment,

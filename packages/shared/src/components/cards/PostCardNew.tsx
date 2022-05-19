@@ -41,6 +41,7 @@ import FeaturesContext from '../../contexts/FeaturesContext';
 import SimpleTooltip from '../tooltips/SimpleTooltip';
 import MenuIcon from '../../../icons/menu.svg';
 import { PostCardProps } from './PostCard';
+import BookmarkIcon from '../../../icons/bookmark.svg';
 
 const FeaturedComment = dynamic(() => import('./FeaturedComment'));
 
@@ -123,8 +124,7 @@ export const PostCardNew = forwardRef(function PostCardNew(
         readTime={post.readTime}
         className="mx-6"
       />
-      <div className="flex justify-between mt-5">
-        <div>
+      <div className="flex justify-between items-center mt-5">
           <ActionButtons
             post={post}
             onUpvoteClick={onUpvoteClick}
@@ -133,21 +133,19 @@ export const PostCardNew = forwardRef(function PostCardNew(
             onMenuClick={onMenuClick}
             showShare={showShare}
             onShare={onShare}
-            className={classNames('justify-between ml-4', !showImage && 'mt-4')}
-            bookmarkStyle="mouse:invisible mouse:group-hover:visible"
+            className={classNames('flex', !showImage && 'mt-4')}
+            bookmarkStyle=" mouse:group-hover:visible"
           />
-        </div>
-        <div>
-          <SimpleTooltip content="Options">
-            <Button
-              className="mouse:invisible mouse:group-hover:visible my-auto btn-tertiary"
-              style={{ marginRight: '1rem', marginLeft: '0.5rem' }}
-              icon={<MenuIcon />}
-              onClick={(event) => onMenuClick?.(event, post)}
-              buttonSize="small"
-            />
-          </SimpleTooltip>
-        </div>
+
+        <SimpleTooltip content="Options">
+          <Button
+            className=" mouse:group-hover:visible my-auto btn-tertiary"
+            style={{ marginRight: '1rem', marginLeft: '0.5rem' }}
+            icon={<MenuIcon />}
+            onClick={(event) => onMenuClick?.(event, post)}
+            buttonSize="small"
+          />
+        </SimpleTooltip>
       </div>
       {!showImage && (
         <PostAuthor

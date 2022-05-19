@@ -28,6 +28,7 @@ import { ProfileImageLink } from '../profile/ProfileImageLink';
 import ModalPostLink from './ModalPostLink';
 import SimpleTooltip from '../tooltips/SimpleTooltip';
 import MenuIcon from '../../../icons/menu.svg';
+import BookmarkIcon from '../../../icons/bookmark.svg';
 
 export const PostListNew = forwardRef(function PostListNew(
   {
@@ -126,7 +127,7 @@ export const PostListNew = forwardRef(function PostListNew(
             onBookmarkClick={onBookmarkClick}
             showShare={showShare}
             onShare={onShare}
-            className="ml-4"
+            className="flex ml-4"
             bookmarkStyle="mouse:invisible mouse:group-hover:visible"
           >
             <SimpleTooltip content="Options">
