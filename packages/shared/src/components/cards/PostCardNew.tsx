@@ -124,28 +124,19 @@ export const PostCardNew = forwardRef(function PostCardNew(
         readTime={post.readTime}
         className="mx-6"
       />
-      <div className="flex justify-between items-center mt-5">
-          <ActionButtons
-            post={post}
-            onUpvoteClick={onUpvoteClick}
-            onCommentClick={onCommentClick}
-            onBookmarkClick={onBookmarkClick}
-            onMenuClick={onMenuClick}
-            showShare={showShare}
-            onShare={onShare}
-            className={classNames('flex', !showImage && 'mt-4')}
-            bookmarkStyle=" mouse:group-hover:visible"
-          />
-
-        <SimpleTooltip content="Options">
-          <Button
-            className=" mouse:group-hover:visible my-auto btn-tertiary"
-            style={{ marginRight: '1rem', marginLeft: '0.5rem' }}
-            icon={<MenuIcon />}
-            onClick={(event) => onMenuClick?.(event, post)}
-            buttonSize="small"
-          />
-        </SimpleTooltip>
+      <div className="flex items-center mt-5 ml-6">
+        <ActionButtons
+          post={post}
+          onUpvoteClick={onUpvoteClick}
+          onCommentClick={onCommentClick}
+          onBookmarkClick={onBookmarkClick}
+          onMenuClick={onMenuClick}
+          showShare={showShare}
+          onShare={onShare}
+          className={classNames('flex-1 justify-between', !showImage && 'mt-4')}
+          bookmarkStyle=" mouse:group-hover:visible"
+          isV1={false}
+        />
       </div>
       {!showImage && (
         <PostAuthor

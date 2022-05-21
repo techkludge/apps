@@ -12,6 +12,7 @@ import BookmarkIcon from '../../../icons/bookmark.svg';
 import { Button } from '../buttons/Button';
 import { SimpleTooltip } from '../tooltips/SimpleTooltip';
 import { UpvotesAndCommentsContainer } from './Card';
+import MenuIcon from '../../../icons/menu.svg';
 
 const ShareIcon = dynamic(() => import('../../../icons/share.svg'));
 
@@ -26,6 +27,7 @@ export type ActionButtonsProps = {
   children?: ReactNode;
   onMenuClick?: (event: React.MouseEvent, post: Post) => unknown;
   bookmarkStyle?: string;
+  isV1: boolean;
 };
 
 export default function ActionButtons({
@@ -37,6 +39,7 @@ export default function ActionButtons({
   onShare,
   className,
   bookmarkStyle,
+  isV1,
   children,
 }: ActionButtonsProps): ReactElement {
   const canUpvoteAndComment = true;
@@ -59,41 +62,39 @@ export default function ActionButtons({
     </UpvotesAndCommentsContainer>
   );
 
-  const upvotesAndCommentsButtons = (
-    <>
-      <SimpleTooltip content={post.upvoted ? 'Remove upvote' : 'Upvote'}>
-        <QuaternaryButton
-          id={`post-${post.id}-upvote-btn`}
-          icon={<UpvoteIcon />}
-          buttonSize="small"
-          pressed={post.upvoted}
-          onClick={() => onUpvoteClick?.(post, !post.upvoted)}
-          style={{ width: rem(78) }}
-          className="btn-tertiary-avocado"
-        >
-          <InteractionCounter value={post.numUpvotes > 0 && post.numUpvotes} />
-        </QuaternaryButton>
-      </SimpleTooltip>
-      <SimpleTooltip content="Comments">
-        <QuaternaryButton
-          id={`post-${post.id}-comment-btn`}
-          icon={<CommentIcon />}
-          buttonSize="small"
-          pressed={post.commented}
-          onClick={() => onCommentClick?.(post)}
-          style={{ width: rem(78) }}
-          className="btn-tertiary-avocado"
-        >
-          <InteractionCounter
-            value={post.numComments > 0 && post.numComments}
-          />
-        </QuaternaryButton>
-      </SimpleTooltip>
-    </>
-  );
+  const upvotesAndCommentsButtons = [
+    <SimpleTooltip content={post.upvoted ? 'Remove upvote' : 'Upvote'}>
+      <QuaternaryButton
+        id={`post-${post.id}-upvote-btn`}
+        icon={<UpvoteIcon />}
+        buttonSize="small"
+        pressed={post.upvoted}
+        onClick={() => onUpvoteClick?.(post, !post.upvoted)}
+        style={{ width: rem(78) }}
+        className="btn-tertiary-avocado"
+      >
+        <InteractionCounter value={post.numUpvotes > 0 && post.numUpvotes} />
+      </QuaternaryButton>
+    </SimpleTooltip>,
+    <SimpleTooltip content="Comments">
+      <QuaternaryButton
+        id={`post-${post.id}-comment-btn`}
+        icon={<CommentIcon />}
+        buttonSize="small"
+        pressed={post.commented}
+        onClick={() => onCommentClick?.(post)}
+        style={{ width: rem(78) }}
+        className="btn-tertiary-avocado"
+      >
+        <InteractionCounter value={post.numComments > 0 && post.numComments} />
+      </QuaternaryButton>
+    </SimpleTooltip>,
+  ];
 
   return (
-    <div className={classNames('flex', className)}>
+    <div
+      className={classNames('flex', canUpvoteAndComment && 'mx-4', className)}
+    >
       {canUpvoteAndComment
         ? upvotesAndCommentsButtons
         : upvotesAndCommentsStatic}
@@ -108,7 +109,7 @@ export default function ActionButtons({
           />
         </SimpleTooltip>
       )}
-      <div className="flex flex-row ml-[1.625rem]">
+      <div className="flex">
         <SimpleTooltip
           content={post.bookmarked ? 'Remove bookmark' : 'Bookmark'}
         >
@@ -120,6 +121,16 @@ export default function ActionButtons({
             onClick={() => onBookmarkClick?.(post, !post.bookmarked)}
           />
         </SimpleTooltip>
+        {!isV1 && (
+          <SimpleTooltip content="Options">
+            <Button
+              className="mouse:invisible mouse:group-hover:visible my-auto btn-tertiary"
+              style={{ marginRight: '0.75rem', marginLeft: '0.75rem' }}
+              icon={<MenuIcon />}
+              buttonSize="small"
+            />
+          </SimpleTooltip>
+        )}
         {children}
       </div>
     </div>

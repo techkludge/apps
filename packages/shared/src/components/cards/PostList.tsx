@@ -21,6 +21,9 @@ import TrendingFlag from './TrendingFlag';
 import PostAuthor from './PostAuthor';
 import PostOptions from '../buttons/OptionsButton';
 import { PostCardProps } from './PostCard';
+import SimpleTooltip from '../tooltips/SimpleTooltip';
+import { Button } from '../buttons/Button';
+import MenuIcon from '../../../icons/menu.svg';
 
 export const PostList = forwardRef(function PostList(
   {
@@ -39,6 +42,7 @@ export const PostList = forwardRef(function PostList(
     className,
     children,
     postHeadingFont,
+    isV1,
     ...props
   }: PostCardProps,
   ref: Ref<HTMLElement>,
@@ -88,13 +92,18 @@ export const PostList = forwardRef(function PostList(
           showShare={showShare}
           onShare={onShare}
           className="relative self-stretch mt-1 ml-0"
+          isV1={isV1}
         >
-          <PostOptions
-            onClick={(event) => onMenuClick?.(event, post)}
-            post={post}
-          />
+          {isV1 && (
+            <div className="absolute right-0 bottom-0 z-0">
+              <PostOptions
+                onClick={(event) => onMenuClick?.(event, post)}
+                post={post}
+              />
+            </div>
+          )}
           {notification && (
-            <CardNotification className="absolute right-0 bottom-0 z-2 text-center">
+            <CardNotification className="absolute right-0 bottom-0 z-0 text-center">
               {notification}
             </CardNotification>
           )}

@@ -71,7 +71,7 @@ export const CardNotification = classed(
 
 export const UpvotesAndCommentsContainer = classed(
   'div',
-  'flex items-center ml-2',
+  'flex items-center mr-6',
 );
 
 

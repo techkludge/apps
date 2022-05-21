@@ -124,8 +124,8 @@ export default function FeedItemComponent({
   onAdClick,
   postHeadingFont,
 }: FeedItemComponentProps): ReactElement {
-  const isV1 = true;
-  const isArticleModalByDefault = false;
+  const isV1 = false;
+  const isArticleModalByDefault = true;
   const PostTag = useList
     ? isV1
       ? PostList
@@ -181,6 +181,7 @@ export default function FeedItemComponent({
           onCommentClick={(post) => onCommentClick(post, index, row, column)}
           postHeadingFont={postHeadingFont}
           isArticleModalByDefault={isArticleModalByDefault}
+          isV1={isV1}
         >
           {showCommentPopupId === item.post.id && (
             <CommentPopup

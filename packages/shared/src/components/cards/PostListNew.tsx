@@ -28,6 +28,7 @@ import { ProfileImageLink } from '../profile/ProfileImageLink';
 import ModalPostLink from './ModalPostLink';
 import SimpleTooltip from '../tooltips/SimpleTooltip';
 import MenuIcon from '../../../icons/menu.svg';
+import ActionsButton2 from './ActionsButton2';
 import BookmarkIcon from '../../../icons/bookmark.svg';
 
 export const PostListNew = forwardRef(function PostListNew(
@@ -127,18 +128,10 @@ export const PostListNew = forwardRef(function PostListNew(
             onBookmarkClick={onBookmarkClick}
             showShare={showShare}
             onShare={onShare}
-            className="flex ml-4"
+            className="flex items-center ml-4"
             bookmarkStyle="mouse:invisible mouse:group-hover:visible"
+            isV1={false}
           >
-            <SimpleTooltip content="Options">
-              <Button
-                className="mouse:invisible mouse:group-hover:visible my-auto btn-tertiary"
-                style={{ marginRight: '1rem', marginLeft: '0.5rem' }}
-                icon={<MenuIcon />}
-                onClick={(event) => onMenuClick?.(event, post)}
-                buttonSize="small"
-              />
-            </SimpleTooltip>
 
             {notification && (
               <CardNotification className="absolute right-0 bottom-0 z-2 text-center">

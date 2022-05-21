@@ -3,6 +3,7 @@ import React, {
   HTMLAttributes,
   ReactElement,
   Ref,
+  useContext,
   useState,
 } from 'react';
 import classNames from 'classnames';
@@ -32,6 +33,8 @@ import OptionsButton from '../buttons/OptionsButton';
 import { ProfilePicture } from '../ProfilePicture';
 import { Button } from '../buttons/Button';
 import OpenLinkIcon from '../../../icons/open_link.svg';
+import AnalyticsContext from '../../contexts/AnalyticsContext';
+import ModalPostLink from './ModalPostLink';
 
 const FeaturedComment = dynamic(() => import('./FeaturedComment'));
 
@@ -53,6 +56,7 @@ export type PostCardProps = {
   showImage?: boolean;
   postHeadingFont: string;
   isArticleModalByDefault: boolean;
+  isV1: boolean;
   bookmarkStyle?: string;
 } & HTMLAttributes<HTMLDivElement>;
 
@@ -76,12 +80,22 @@ export const PostCard = forwardRef(function PostCard(
     style,
     postHeadingFont,
     isArticleModalByDefault,
+    isV1,
     ...props
   }: PostCardProps,
   ref: Ref<HTMLElement>,
 ): ReactElement {
   const [selectedComment, setSelectedComment] = useState<Comment>();
   const { trending } = post;
+  const { trackEvent } = useContext(AnalyticsContext);
+
+
+  const onOpenArticlePage = () => {
+    trackEvent({
+      eventName: 'go to link',
+      post: post,
+    });
+  };
 
   const customStyle =
     selectedComment && !showImage ? { minHeight: '15.125rem' } : {};
@@ -92,7 +106,15 @@ export const PostCard = forwardRef(function PostCard(
       style={{ ...style, ...customStyle }}
       ref={ref}
     >
-      <PostLink post={post} openNewTab={openNewTab} onLinkClick={onLinkClick} />
+      {isArticleModalByDefault ? (
+        <ModalPostLink post={post} onLinkClick={onCommentClick} />
+      ) : (
+        <PostLink
+          post={post}
+          openNewTab={openNewTab}
+          onLinkClick={onLinkClick}
+        />
+      )}
       <CardTextContainer>
         <CardHeader>
           {notification ? (
@@ -114,11 +136,14 @@ export const PostCard = forwardRef(function PostCard(
                   tag="a"
                   href={post.permalink}
                   target="_blank"
-                  // onClick={onOpenArticlePage}
+                  onClick={onOpenArticlePage}
                 >
-                  <p className="truncate w-28">{post.commentsPermalink}</p>
+                  <p className="truncate w-[7.313rem]">
+                    {post.commentsPermalink}
+                  </p>
                 </Button>
               )}
+
               <OptionsButton
                 onClick={(event) => onMenuClick?.(event, post)}
                 post={post}
@@ -175,7 +200,8 @@ export const PostCard = forwardRef(function PostCard(
         onBookmarkClick={onBookmarkClick}
         showShare={showShare}
         onShare={onShare}
-        className={classNames('justify-between', !showImage && 'mt-4')}
+        isV1={isV1}
+        className={classNames('ml-4 justify-between', !showImage && 'mt-4')}
       />
       {selectedComment && (
         <FeaturedComment
