@@ -40,6 +40,7 @@ export default function ActionButtons({
   className,
   bookmarkStyle,
   isV1,
+  onMenuClick,
   children,
 }: ActionButtonsProps): ReactElement {
   const canUpvoteAndComment = true;
@@ -92,9 +93,7 @@ export default function ActionButtons({
   ];
 
   return (
-    <div
-      className={classNames('flex', className)}
-    >
+    <div className={classNames('flex', className)}>
       {canUpvoteAndComment
         ? upvotesAndCommentsButtons
         : upvotesAndCommentsStatic}
@@ -128,6 +127,7 @@ export default function ActionButtons({
               style={{ marginRight: '0.75rem', marginLeft: '0.75rem' }}
               icon={<MenuIcon />}
               buttonSize="small"
+              onClick={(event) => onMenuClick?.(event, post)}
             />
           </SimpleTooltip>
         )}

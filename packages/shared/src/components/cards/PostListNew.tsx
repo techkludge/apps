@@ -126,13 +126,13 @@ export const PostListNew = forwardRef(function PostListNew(
             onUpvoteClick={onUpvoteClick}
             onCommentClick={onCommentClick}
             onBookmarkClick={onBookmarkClick}
+            onMenuClick={onMenuClick}
             showShare={showShare}
             onShare={onShare}
             className="flex items-center ml-4"
             bookmarkStyle="mouse:invisible mouse:group-hover:visible"
             isV1={false}
           >
-
             {notification && (
               <CardNotification className="absolute right-0 bottom-0 z-2 text-center">
                 {notification}
