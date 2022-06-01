@@ -13,6 +13,7 @@ export default function PostLink({
 }: PostLinkProps): ReactElement {
   return (
     <CardLink
+      href="#"
       title={post.title}
       onClick={() => onLinkClick?.(post)}
     />

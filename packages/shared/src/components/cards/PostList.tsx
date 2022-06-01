@@ -24,6 +24,7 @@ import { PostCardProps } from './PostCard';
 import SimpleTooltip from '../tooltips/SimpleTooltip';
 import { Button } from '../buttons/Button';
 import MenuIcon from '../../../icons/menu.svg';
+import ModalPostLink from './ModalPostLink';
 
 export const PostList = forwardRef(function PostList(
   {
@@ -43,6 +44,7 @@ export const PostList = forwardRef(function PostList(
     children,
     postHeadingFont,
     isV1,
+    isArticleModalByDefault,
     ...props
   }: PostCardProps,
   ref: Ref<HTMLElement>,
@@ -57,7 +59,15 @@ export const PostList = forwardRef(function PostList(
       className={getPostClassNames(post, selectedComment, className)}
       ref={ref}
     >
-      <PostLink post={post} openNewTab={openNewTab} onLinkClick={onLinkClick} />
+      {isArticleModalByDefault ? (
+        <ModalPostLink post={post} onLinkClick={onCommentClick} />
+      ) : (
+        <PostLink
+          post={post}
+          openNewTab={openNewTab}
+          onLinkClick={onLinkClick}
+        />
+      )}
       <ListCardAside>
         <SourceButton post={post} className="pb-2" tooltipPosition="top" />
         {featuredCommentsToButtons(

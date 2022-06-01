@@ -72,7 +72,6 @@ export const PostListNew = forwardRef(function PostListNew(
           onLinkClick={onLinkClick}
         />
       )}
-
       <ListCardDivider />
       <ListCardMain>
         <ListCardTitle className={classNames(className, postHeadingFont)}>
