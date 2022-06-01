@@ -89,7 +89,6 @@ export const PostCard = forwardRef(function PostCard(
   const { trending } = post;
   const { trackEvent } = useContext(AnalyticsContext);
 
-
   const onOpenArticlePage = () => {
     trackEvent({
       eventName: 'go to link',
@@ -193,16 +192,18 @@ export const PostCard = forwardRef(function PostCard(
           )}
         </CardImage>
       )}
-      <ActionButtons
-        post={post}
-        onUpvoteClick={onUpvoteClick}
-        onCommentClick={onCommentClick}
-        onBookmarkClick={onBookmarkClick}
-        showShare={showShare}
-        onShare={onShare}
-        isV1={isV1}
-        className={classNames('ml-4 justify-between', !showImage && 'mt-4')}
-      />
+      <div className="mx-4 justify-between">
+        <ActionButtons
+          post={post}
+          onUpvoteClick={onUpvoteClick}
+          onCommentClick={onCommentClick}
+          onBookmarkClick={onBookmarkClick}
+          showShare={showShare}
+          onShare={onShare}
+          isV1={isV1}
+          className={classNames('justify-between', isV1 && '-ml-2', !showImage && 'mt-4')}
+        />
+      </div>
       {selectedComment && (
         <FeaturedComment
           comment={selectedComment}

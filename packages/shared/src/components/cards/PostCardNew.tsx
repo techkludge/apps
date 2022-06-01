@@ -124,7 +124,7 @@ export const PostCardNew = forwardRef(function PostCardNew(
         readTime={post.readTime}
         className="mx-6"
       />
-      <div className="flex items-center mt-5 ml-6">
+      <div className="flex items-center mt-5 ml-4">
         <ActionButtons
           post={post}
           onUpvoteClick={onUpvoteClick}
@@ -133,7 +133,7 @@ export const PostCardNew = forwardRef(function PostCardNew(
           onMenuClick={onMenuClick}
           showShare={showShare}
           onShare={onShare}
-          className={classNames('flex-1 justify-between', !showImage && 'mt-4')}
+          className={classNames('flex-1 justify-between ml-2', !showImage && 'mt-4')}
           bookmarkStyle=" mouse:group-hover:visible"
           isV1={false}
         />

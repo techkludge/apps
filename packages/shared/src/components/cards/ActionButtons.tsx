@@ -93,7 +93,7 @@ export default function ActionButtons({
 
   return (
     <div
-      className={classNames('flex', canUpvoteAndComment && 'mx-4', className)}
+      className={classNames('flex', className)}
     >
       {canUpvoteAndComment
         ? upvotesAndCommentsButtons
