@@ -201,7 +201,7 @@ export const PostCard = forwardRef(function PostCard(
           showShare={showShare}
           onShare={onShare}
           isV1={isV1}
-          className={classNames('justify-between', isV1 && '-ml-2', !showImage && 'mt-4')}
+          className={classNames('justify-between', isV1 && '-ml-4', !showImage && 'mt-4')}
         />
       </div>
       {selectedComment && (
